@@ -2,7 +2,7 @@
 //  ImageFeedUITests.swift
 //  ImageFeedUITests
 //
-//  Created by Альбина on 08.02.2026.
+//  Created by Albina Musugalieva on 08.02.2026.
 //
 
 import XCTest
