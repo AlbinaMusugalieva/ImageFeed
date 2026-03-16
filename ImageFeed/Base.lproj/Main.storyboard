@@ -142,7 +142,6 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="share_button"/>
                                 <connections>
-                                    <action selector="didTapBackButton" destination="QHo-Pj-n5P" eventType="touchUpInside" id="a9L-n8-gaI"/>
                                     <action selector="didTapShareButton:" destination="QHo-Pj-n5P" eventType="touchUpInside" id="MW7-DE-LfV"/>
                                 </connections>
                             </button>
