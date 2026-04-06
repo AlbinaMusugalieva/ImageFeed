@@ -24,7 +24,7 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="288-Cz-rVz">
-                                <rect key="frame" x="16" y="754" width="343" height="48"/>
+                                <rect key="frame" x="16" y="646" width="343" height="48"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="72F-FJ-pvQ"/>
@@ -50,7 +50,7 @@
                         <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="288-Cz-rVz" firstAttribute="leading" secondItem="IX8-gR-XgZ" secondAttribute="leading" constant="16" id="E1G-iD-HAB"/>
-                            <constraint firstItem="IX8-gR-XgZ" firstAttribute="bottom" secondItem="288-Cz-rVz" secondAttribute="bottom" constant="16" id="Rah-MW-STg"/>
+                            <constraint firstItem="IX8-gR-XgZ" firstAttribute="bottom" secondItem="288-Cz-rVz" secondAttribute="bottom" constant="124" id="Rah-MW-STg"/>
                             <constraint firstItem="vtY-48-D6D" firstAttribute="centerX" secondItem="IX8-gR-XgZ" secondAttribute="centerX" id="WKB-5G-BbD"/>
                             <constraint firstItem="vtY-48-D6D" firstAttribute="centerY" secondItem="IX8-gR-XgZ" secondAttribute="centerY" id="Xgg-oG-U9f"/>
                         </constraints>

@@ -11,7 +11,7 @@ final class OAuth2TokenStorage{
     private let  bearerToken = "bearerToken"
     var token: String?{
         get{
-            return UserDefaults.standard.string(forKey: bearerToken)
+            UserDefaults.standard.string(forKey: bearerToken)
         }
         set{
             UserDefaults.standard.set(newValue, forKey: bearerToken)
