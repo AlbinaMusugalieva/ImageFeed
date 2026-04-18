@@ -6,47 +6,69 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
+    private var avatarImageView = UIImageView()
+    private var nameLabel = UILabel()
+    private var loginNameLabel = UILabel()
+    private var descriptionLabel = UILabel()
+    private var logoutButton = UIButton()
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(named: "YP Black")
         setupUserImageView()
         setupUserNameLabel()
         setupDescriptionLabel()
         setupLoginLabel()
         setupLogoutButton()
         
+        if let profile = ProfileService.shared.profile {
+            updateProfileDetails(profile: profile)
+        }
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
+        
     }
     
     private func setupUserImageView(){
         let profileImage = UIImage(named: "Photo")
-        let imageView = UIImageView(image: profileImage)
-        imageView.tintColor = .ypBackground
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(imageView)
-        imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 76).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        avatarImageView = UIImageView(image: profileImage)
+        avatarImageView.tintColor = .ypBackground
+        avatarImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(avatarImageView)
+        avatarImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        avatarImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 76).isActive = true
+        avatarImageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        avatarImageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
     }
     
     private func setupUserNameLabel(){
-        let usernameLabel = UILabel()
-        usernameLabel.text = "Екатерина Новикова"
-        usernameLabel.textColor = .ypWhite
-        usernameLabel.font = UIFont.systemFont(ofSize: 23)
-        usernameLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(usernameLabel)
-        usernameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        usernameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 154).isActive = true
-        usernameLabel.widthAnchor.constraint(equalToConstant: 235).isActive = true
-        usernameLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        nameLabel.text = "Екатерина Новикова"
+        nameLabel.textColor = .ypWhite
+        nameLabel.font = UIFont.systemFont(ofSize: 23)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(nameLabel)
+        nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 154).isActive = true
+        nameLabel.widthAnchor.constraint(equalToConstant: 235).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
     }
     
     private func setupDescriptionLabel(){
-        let descriptionLabel = UILabel()
         descriptionLabel.text = "Hello,world!"
         descriptionLabel.textColor = .ypWhite
         descriptionLabel.font = UIFont.systemFont(ofSize: 13)
@@ -59,16 +81,15 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupLoginLabel(){
-        let loginLabel = UILabel()
-        loginLabel.text = "@ekaterina_nov"
-        loginLabel.textColor = .ypWhite
-        loginLabel.font = UIFont.systemFont(ofSize: 13)
-        loginLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(loginLabel)
-        loginLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        loginLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 180).isActive = true
-        loginLabel.widthAnchor.constraint(equalToConstant: 99).isActive = true
-        loginLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        loginNameLabel.text = "@ekaterina_nov"
+        loginNameLabel.textColor = .ypWhite
+        loginNameLabel.font = UIFont.systemFont(ofSize: 13)
+        loginNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loginNameLabel)
+        loginNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        loginNameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 180).isActive = true
+        loginNameLabel.widthAnchor.constraint(equalToConstant: 99).isActive = true
+        loginNameLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
     }
     
     private func setupLogoutButton(){
@@ -81,6 +102,53 @@ final class ProfileViewController: UIViewController {
         button.topAnchor.constraint(equalTo: view.topAnchor, constant: 89).isActive = true
         button.widthAnchor.constraint(equalToConstant: 44).isActive = true
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+    }
+    
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name.isEmpty
+        ? "Имя не указано"
+        : profile.name
+        loginNameLabel.text = profile.loginName.isEmpty
+        ? "@неизвестный_пользователь"
+        : profile.loginName
+        descriptionLabel.text = (profile.bio?.isEmpty ?? true)
+        ? "Профиль не заполнен"
+        : profile.bio
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let imageUrl = URL(string: profileImageURL)
+        else { return }
+        
+        print("imageUrl: \(imageUrl)")
+        
+        let placeholderImage = UIImage(systemName: "person.circle.fill")?
+            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        avatarImageView.kf.indicatorType = .activity
+        avatarImageView.kf.setImage(
+            with: imageUrl,
+            placeholder: placeholderImage,
+            options: [
+                .processor(processor),
+                .scaleFactor(UIScreen.main.scale),
+                .cacheOriginalImage,
+                .forceRefresh
+            ]) { result in
+                
+                switch result {
+                case .success(let value):
+                    print(value.image)
+                    print(value.cacheType)
+                    print(value.source)
+                case .failure(let error):
+                    print(error)
+                }
+            }
     }
     
     
