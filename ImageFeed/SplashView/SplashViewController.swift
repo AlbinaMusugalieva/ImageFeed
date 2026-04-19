@@ -7,7 +7,7 @@ final class SplashViewController: UIViewController {
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     
-    private var imageView: UIImageView!
+    private var imageView: UIImageView?
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -24,11 +24,18 @@ final class SplashViewController: UIViewController {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
     }
+    override func viewDidLoad() {
+            super.viewDidLoad()
+            
+        view.backgroundColor = UIColor(resource: .ypBackground)
+        }
+        
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
     private func setupImageView() {
+        guard var imageView else {return}
         let imageSplashScreenLogo = UIImage(named: "splash_screen_logo")
         
         imageView = UIImageView(image: imageSplashScreenLogo)

@@ -10,17 +10,17 @@ import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
-    private var avatarImageView = UIImageView()
-    private var nameLabel = UILabel()
-    private var loginNameLabel = UILabel()
-    private var descriptionLabel = UILabel()
-    private var logoutButton = UIButton()
+    private lazy var avatarImageView = UIImageView()
+    private lazy var nameLabel = UILabel()
+    private lazy var loginNameLabel = UILabel()
+    private lazy var descriptionLabel = UILabel()
+    private lazy var logoutButton = UIButton()
     private var profileImageServiceObserver: NSObjectProtocol?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "YP Black")
+        view.backgroundColor = UIColor(resource: .ypBlack)
         setupUserImageView()
         setupUserNameLabel()
         setupDescriptionLabel()
@@ -44,7 +44,7 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupUserImageView(){
-        let profileImage = UIImage(named: "Photo")
+        let profileImage = UIImage(resource: .photo)
         avatarImageView = UIImageView(image: profileImage)
         avatarImageView.tintColor = .ypBackground
         avatarImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,7 +59,7 @@ final class ProfileViewController: UIViewController {
     private func setupUserNameLabel(){
         nameLabel.text = "Екатерина Новикова"
         nameLabel.textColor = .ypWhite
-        nameLabel.font = UIFont.systemFont(ofSize: 23)
+        nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
         nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
@@ -112,7 +112,7 @@ final class ProfileViewController: UIViewController {
         ? "@неизвестный_пользователь"
         : profile.loginName
         descriptionLabel.text = (profile.bio?.isEmpty ?? true)
-        ? "Профиль не заполнен"
+        ? ""
         : profile.bio
     }
     

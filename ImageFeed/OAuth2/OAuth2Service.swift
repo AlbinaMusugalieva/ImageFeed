@@ -10,7 +10,7 @@ import Foundation
 final class OAuth2Service {
     
     static let shared = OAuth2Service()
-    let tokenStorage = OAuth2TokenStorage.shared
+    private let tokenStorage = OAuth2TokenStorage.shared
     private let urlSession = URLSession.shared
     
     private var task: URLSessionTask?
@@ -31,7 +31,7 @@ final class OAuth2Service {
     }
     private(set) var authToken: String? {
         get {
-            return tokenStorage.token
+            tokenStorage.token
         }
         set {
             tokenStorage.token = newValue
@@ -63,7 +63,6 @@ final class OAuth2Service {
         
         
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
-            DispatchQueue.main.async {
                 UIBlockingProgressHUD.dismiss()
                 guard let self = self else { return }
                 switch result {
@@ -80,7 +79,6 @@ final class OAuth2Service {
                     completion(.failure(error))
                     self.task = nil
                     self.lastCode = nil
-                }
             }
         }
         self.task = task
