@@ -102,6 +102,8 @@ final class ProfileViewController: UIViewController {
         button.topAnchor.constraint(equalTo: view.topAnchor, constant: 89).isActive = true
         button.widthAnchor.constraint(equalToConstant: 44).isActive = true
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.addTarget(self, action: #selector(Self.didTapLogoutButton), for: .touchUpInside)
+        
     }
     
     private func updateProfileDetails(profile: Profile) {
@@ -150,6 +152,29 @@ final class ProfileViewController: UIViewController {
                 }
             }
     }
-    
+    @objc private func didTapLogoutButton() {
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+        let noAction = UIAlertAction(title: "Нет", style: .cancel)
+        let yesAction = UIAlertAction(title: "Да", style: .default) { _ in
+            ProfileLogoutService.shared.logout()
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = windowScene.windows.first else {
+                assertionFailure("Invalid window configuration")
+                return
+            }
+            
+            let splashViewController = SplashViewController()
+            window.rootViewController = splashViewController
+        }
+        
+        alert.addAction(noAction)
+        alert.addAction(yesAction)
+        
+        present(alert, animated: true)
+    }
     
 }
