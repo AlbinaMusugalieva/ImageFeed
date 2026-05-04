@@ -8,14 +8,21 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? {get set}
+    func updateProfileDetails(profile: Profile)
+    func updateAvatar()
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     
     private lazy var avatarImageView = UIImageView()
     private lazy var nameLabel = UILabel()
     private lazy var loginNameLabel = UILabel()
     private lazy var descriptionLabel = UILabel()
     private lazy var logoutButton = UIButton()
-    private var profileImageServiceObserver: NSObjectProtocol?
+    
+    var presenter: ProfilePresenterProtocol?
     
     
     override func viewDidLoad() {
@@ -27,20 +34,13 @@ final class ProfileViewController: UIViewController {
         setupLoginLabel()
         setupLogoutButton()
         
-        if let profile = ProfileService.shared.profile {
-            updateProfileDetails(profile: profile)
-        }
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
-        updateAvatar()
+        presenter?.viewDidLoad()
         
+    }
+    
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
     }
     
     private func setupUserImageView(){
@@ -95,6 +95,7 @@ final class ProfileViewController: UIViewController {
     private func setupLogoutButton(){
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "Exit"), for: .normal)
+        button.accessibilityIdentifier = "logoutButton"
         button.tintColor = .ypRed
         button.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(button)
@@ -106,7 +107,7 @@ final class ProfileViewController: UIViewController {
         
     }
     
-    private func updateProfileDetails(profile: Profile) {
+    func updateProfileDetails(profile: Profile) {
         nameLabel.text = profile.name.isEmpty
         ? "Имя не указано"
         : profile.name
@@ -118,7 +119,7 @@ final class ProfileViewController: UIViewController {
         : profile.bio
     }
     
-    private func updateAvatar() {
+    func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let imageUrl = URL(string: profileImageURL)
@@ -160,7 +161,7 @@ final class ProfileViewController: UIViewController {
         )
         let noAction = UIAlertAction(title: "Нет", style: .cancel)
         let yesAction = UIAlertAction(title: "Да", style: .default) { _ in
-            ProfileLogoutService.shared.logout()
+            self.presenter?.tapLogoutButton()
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                   let window = windowScene.windows.first else {
                 assertionFailure("Invalid window configuration")

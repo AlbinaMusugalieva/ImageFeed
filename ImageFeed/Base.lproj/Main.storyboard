@@ -27,6 +27,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="288-Cz-rVz">
                                 <rect key="frame" x="16" y="612" width="343" height="48"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="72F-FJ-pvQ"/>
                                     <constraint firstAttribute="width" constant="343" id="ZXz-Dk-dZg"/>
@@ -65,7 +66,7 @@
         <!--Web View View Controller-->
         <scene sceneID="JIr-Xz-411">
             <objects>
-                <viewController id="7hm-um-0Jn" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" id="7hm-um-0Jn" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dSO-XV-Ap7">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -135,6 +136,7 @@
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iu5-zT-CZr">
                                                     <rect key="frame" x="309" y="48" width="75" height="35"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="likeButton"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="UF3-gb-rtY"/>
                                                         <constraint firstAttribute="width" constant="44" id="jbg-w1-NXY"/>
@@ -213,6 +215,7 @@
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="FBS-lm-h5E">
                                         <rect key="frame" x="0.0" y="0.0" width="1600" height="1059"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="nav back button white"/>
                                     </imageView>
                                 </subviews>
                                 <viewLayoutGuide key="contentLayoutGuide" id="1PU-ve-gHn"/>
@@ -223,6 +226,7 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJ0-Ek-SD6" userLabel="BackButton">
                                 <rect key="frame" x="9" y="67" width="24" height="24"/>
+                                <accessibility key="accessibilityConfiguration" identifier="navBackButtonWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="24" id="FCR-xu-GQD"/>
                                     <constraint firstAttribute="height" constant="24" id="nL1-Pb-7NF"/>

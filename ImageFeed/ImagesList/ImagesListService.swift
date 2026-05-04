@@ -58,13 +58,13 @@ final class ImagesListService{
     private init(){}
     
     func fetchPhotosNextPage () {
-       guard task == nil else {return}
+        guard task == nil else {return}
         let nextPage = (lastLoadedPage ?? 0) + 1
         
         guard let token = tokenStorage.token, let request = makeImagesListRequest(page: nextPage, token: token) else {
             return
         }
-    
+        
         task = urlSession.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self else { return }
             switch result {
@@ -84,14 +84,12 @@ final class ImagesListService{
                         isLiked: result.isLiked
                     )
                 }
-                DispatchQueue.main.async {
-                    self.photos.append(contentsOf: newPhotos)
-                    self.lastLoadedPage = nextPage
-                    NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
-                }
+                self.photos.append(contentsOf: newPhotos)
+                self.lastLoadedPage = nextPage
+                NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
             case .failure:
-                    print("Failure to load photos in ImagesListService")
-                 
+                print("Failure to load photos in ImagesListService")
+                
             }
             self.task = nil
         }
@@ -105,31 +103,29 @@ final class ImagesListService{
         guard let token = tokenStorage.token, let request = makeChangeLikeRequest(photoId: photoId, isLike: isLike, token: token) else {
             return
         }
-      
+        
         task = urlSession.data(for: request) { [weak self] result in
             guard let self else { return }
             switch result {
             case .success:
                 if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-                   let photo = self.photos[index]
-                   let newPhoto = Photo(
-                            id: photo.id,
-                            size: photo.size,
-                            createdAt: photo.createdAt,
-                            welcomeDescription: photo.welcomeDescription,
-                            thumbImageURL: photo.thumbImageURL,
-                            largeImageURL: photo.largeImageURL,
-                            isLiked: !photo.isLiked
-                        )
-                    DispatchQueue.main.async {
-                        self.photos[index] = newPhoto
-                        completion(.success(()))
-                    }
+                    let photo = self.photos[index]
+                    let newPhoto = Photo(
+                        id: photo.id,
+                        size: photo.size,
+                        createdAt: photo.createdAt,
+                        welcomeDescription: photo.welcomeDescription,
+                        thumbImageURL: photo.thumbImageURL,
+                        largeImageURL: photo.largeImageURL,
+                        isLiked: !photo.isLiked
+                    )
+                    self.photos[index] = newPhoto
+                    completion(.success(()))
                 }
             case .failure(let error):
-                    print("Failure to changeLike in ImagesListService")
+                print("Failure to changeLike in ImagesListService")
                 completion(.failure(error))
-                 
+                
             }
             self.task = nil
         }
@@ -146,7 +142,7 @@ final class ImagesListService{
     private func makeImagesListRequest(page: Int, token: String) -> URLRequest? {
         var urlComponents = URLComponents(string: Constants.defaultBaseURLString + "/photos")
         urlComponents?.queryItems = [URLQueryItem(name: "page", value: String(page))]
-                
+        
         guard let url = urlComponents?.url else { return nil }
         
         
@@ -160,11 +156,7 @@ final class ImagesListService{
         guard let url = URL(string: Constants.defaultBaseURLString + "/photos/" + photoId + "/like") else { return nil }
         
         var request = URLRequest(url: url)
-        if isLike{
-            request.httpMethod = HTTPMethod.post.rawValue
-        } else {
-            request.httpMethod = HTTPMethod.delete.rawValue
-        }
+        request.httpMethod = isLike ? HTTPMethod.post.rawValue : HTTPMethod.delete.rawValue
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
