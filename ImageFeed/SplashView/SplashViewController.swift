@@ -3,7 +3,7 @@ import UIKit
 
 final class SplashViewController: UIViewController {
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
-   
+    
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     
@@ -25,11 +25,11 @@ final class SplashViewController: UIViewController {
         setNeedsStatusBarAppearanceUpdate()
     }
     override func viewDidLoad() {
-            super.viewDidLoad()
-            
-        view.backgroundColor = UIColor(resource: .ypBackground)
-        }
+        super.viewDidLoad()
         
+        view.backgroundColor = UIColor(resource: .ypBackground)
+    }
+    
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
